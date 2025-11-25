@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 // Day 7: Bridge Repair

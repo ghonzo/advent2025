@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	mapset "github.com/deckarep/golang-set/v2"
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 // Day 15: Warehouse Woes

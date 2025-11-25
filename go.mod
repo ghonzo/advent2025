@@ -1,4 +1,4 @@
-module github.com/ghonzo/advent2024
+module github.com/ghonzo/advent2025
 
 go 1.23
 

@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 // Day 3: Mull It Over

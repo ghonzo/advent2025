@@ -4,7 +4,7 @@ package main
 import (
 	"testing"
 
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 func Test_part1(t *testing.T) {

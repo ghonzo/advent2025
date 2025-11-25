@@ -1,18 +1,18 @@
-// Advent of Code 2024, Day 1
+// Advent of Code 2025, Day 1
 package main
 
 import (
 	"fmt"
 	"sort"
 
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 // Day 1: Historian Hysteria
 // Part 1 answer: 2192892
 // Part 2 answer: 22962826
 func main() {
-	fmt.Println("Advent of Code 2024, Day 1")
+	fmt.Println("Advent of Code 2025, Day 1")
 	entries := common.ReadStringsFromFile("input.txt")
 	fmt.Printf("Part 1: %d\n", part1(entries))
 	fmt.Printf("Part 2: %d\n", part2(entries))

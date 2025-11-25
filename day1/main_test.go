@@ -1,10 +1,10 @@
-// Advent of Code 2024, Day 1
+// Advent of Code 2025, Day 1
 package main
 
 import (
 	"testing"
 
-	"github.com/ghonzo/advent2024/common"
+	"github.com/ghonzo/advent2025/common"
 )
 
 func Test_part1(t *testing.T) {

@@ -1,5 +1,5 @@
-# advent2024
-[Advent of Code 2024](https://adventofcode.com/2024) in Go
+# advent2025
+[Advent of Code 2025](https://adventofcode.com/2025) in Go
 
 Each day is its own subdirectory, in the file `main.go`. Usually, the input for the day will be in a file called `input.txt`. Additionally,
 the example data is usually in a file called `testdata/example.txt` and is referenced from the unit tests.
@@ -21,7 +21,7 @@ Usage of leaderboard.go:
 Example:
 
 ```
-$ go run leaderboard.go -day 3 -endpoint https://adventofcode.com/2024/leaderboard/private/view/123456.json -session 53616c7465645f5f89e40247fe925752de8a696d76c2f03f361ed6ea24283
+$ go run leaderboard.go -day 3 -endpoint https://adventofcode.com/2025/leaderboard/private/view/123456.json -session 53616c7465645f5f89e40247fe925752de8a696d76c2f03f361ed6ea24283
 
 Day 3                |      Part 1 |      Part 2
 ------------------------------------------------
