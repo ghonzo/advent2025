@@ -4,6 +4,7 @@ package common
 import (
 	"bufio"
 	"io"
+	"iter"
 	"strings"
 )
 
@@ -13,7 +14,7 @@ type Grid interface {
 	Get(coord Point) byte
 	CheckedGet(coord Point) (v byte, ok bool)
 	Set(coord Point, b byte)
-	AllPoints() <-chan Point
+	AllPoints() iter.Seq[Point]
 	Clone() Grid
 }
 
@@ -64,18 +65,17 @@ func (g *ArraysGrid) Clone() Grid {
 }
 
 // AllPoints returns a channel of all the points in the Grid.
-func (g *ArraysGrid) AllPoints() <-chan Point {
-	ch := make(chan Point)
-	go func() {
+func (g *ArraysGrid) AllPoints() iter.Seq[Point] {
+	return func(yield func(Point) bool) {
 		size := g.Size()
 		for y := 0; y < size.y; y++ {
 			for x := 0; x < size.x; x++ {
-				ch <- Point{x, y}
+				if !yield(Point{x, y}) {
+					return
+				}
 			}
 		}
-		close(ch)
-	}()
-	return ch
+	}
 }
 
 // Count returns the number of instances of the given value in the grid
@@ -166,15 +166,14 @@ func (g SparseGrid) Set(coord Point, b byte) {
 }
 
 // AllPoints returns a channel of all the points in the Grid.
-func (g SparseGrid) AllPoints() <-chan Point {
-	ch := make(chan Point)
-	go func() {
+func (g SparseGrid) AllPoints() iter.Seq[Point] {
+	return func(yield func(Point) bool) {
 		for k := range g {
-			ch <- k
+			if !yield(k) {
+				return
+			}
 		}
-		close(ch)
-	}()
-	return ch
+	}
 }
 
 // Clone returns a copy of the Grid, leaving the original untouched.

@@ -1,5 +1,7 @@
 package common
 
+import "iter"
+
 // Point is an immutable data structure representing an X and Y coordinate pair.
 //
 // I know we could have used image.Point, but I wanted to enforce immutability and plus
@@ -103,25 +105,23 @@ var (
 var AllDirections = []Point{UL, U, UR, L, R, DL, D, DR}
 
 // SurroundingPoints returns a channel of all the points (8 of them) that surround the given point
-func (p Point) SurroundingPoints() <-chan Point {
-	ch := make(chan Point)
-	go func() {
+func (p Point) SurroundingPoints() iter.Seq[Point] {
+	return func(yield func(Point) bool) {
 		for _, d := range AllDirections {
-			ch <- p.Add(d)
+			if !yield(p.Add(d)) {
+				return
+			}
 		}
-		close(ch)
-	}()
-	return ch
+	}
 }
 
 // SurroundingCardinals returns a channel of all the points (4 of them) that surround the given point in cardinal directions
-func (p Point) SurroundingCardinals() <-chan Point {
-	ch := make(chan Point)
-	go func() {
+func (p Point) SurroundingCardinals() iter.Seq[Point] {
+	return func(yield func(Point) bool) {
 		for _, d := range []Point{R, D, L, U} {
-			ch <- p.Add(d)
+			if !yield(p.Add(d)) {
+				return
+			}
 		}
-		close(ch)
-	}()
-	return ch
+	}
 }
