@@ -3,14 +3,13 @@ package main
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/ghonzo/advent2025/common"
 )
 
-// Day 1: Historian Hysteria
-// Part 1 answer: 2192892
-// Part 2 answer: 22962826
+// Day 1: Secret Entrance
+// Part 1 answer: 1066
+// Part 2 answer: 6223
 func main() {
 	fmt.Println("Advent of Code 2025, Day 1")
 	entries := common.ReadStringsFromFile("input.txt")
@@ -19,33 +18,52 @@ func main() {
 }
 
 func part1(entries []string) int {
-	var total int
-	left := make([]int, len(entries))
-	right := make([]int, len(entries))
-	for i, line := range entries {
-		values := common.ConvertToInts(line)
-		left[i] = values[0]
-		right[i] = values[1]
+	pos := 50
+	var count int
+	for _, line := range entries {
+		delta := common.Atoi(line[1:])
+		if line[0] == 'L' {
+			delta *= -1
+		}
+		pos += delta
+		pos = common.Mod(pos, 100)
+		if pos == 0 {
+			count++
+		}
 	}
-	sort.Ints(left)
-	sort.Ints(right)
-	for i, l := range left {
-		total += common.Abs(l - right[i])
-	}
-	return total
+	return count
 }
 
 func part2(entries []string) int {
-	var total int
-	left := make([]int, len(entries))
-	rightMap := make(map[int]int)
-	for i, line := range entries {
-		values := common.ConvertToInts(line)
-		left[i] = values[0]
-		rightMap[values[1]]++
+	pos := 50
+	var count int
+	for _, line := range entries {
+		delta := common.Atoi(line[1:])
+		if line[0] == 'L' {
+			delta *= -1
+		}
+		startAtZero := pos == 0
+		pos += delta
+		for pos < 0 {
+			pos += 100
+			if startAtZero {
+				// I know this is strange, maybe we need a better variable name
+				startAtZero = false
+				continue
+			}
+			if pos != 0 || delta < -100 {
+				count++
+			}
+		}
+		for pos >= 100 {
+			pos -= 100
+			if pos != 0 {
+				count++
+			}
+		}
+		if pos == 0 {
+			count++
+		}
 	}
-	for _, l := range left {
-		total += l * rightMap[l]
-	}
-	return total
+	return count
 }

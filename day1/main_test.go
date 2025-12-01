@@ -16,7 +16,7 @@ func Test_part1(t *testing.T) {
 		args args
 		want int
 	}{
-		{"example", args{common.ReadStringsFromFile("testdata/example.txt")}, 11},
+		{"example", args{common.ReadStringsFromFile("testdata/example.txt")}, 3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -36,7 +36,9 @@ func Test_part2(t *testing.T) {
 		args args
 		want int
 	}{
-		{"example", args{common.ReadStringsFromFile("testdata/example.txt")}, 31},
+		{"example", args{common.ReadStringsFromFile("testdata/example.txt")}, 6},
+		{"example2", args{[]string{"R1000"}}, 10},
+		{"example3", args{[]string{"L150"}}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
