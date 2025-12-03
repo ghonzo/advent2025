@@ -112,7 +112,7 @@ func renderResults(body []byte, day int) string {
 	if err != nil {
 		panic("bad time zone")
 	}
-	dayStart := time.Date(2024, time.December, day, 0, 0, 0, 0, eastCoastLocation)
+	dayStart := time.Date(2025, time.December, day, 0, 0, 0, 0, eastCoastLocation)
 	// Just return the names that have at least one star on the day
 	var sb strings.Builder
 	const fmtString = "%-20s | %11v | %11v"
@@ -121,7 +121,7 @@ func renderResults(body []byte, day int) string {
 	for _, m := range membersForDay(members, day) {
 		if stars, ok := m.day[day]; ok {
 			part1Duration := stars.part1.Sub(dayStart)
-			if stars.part2 == zeroTime {
+			if stars.part2.Equal(zeroTime) {
 				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, "-"))
 			} else {
 				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, stars.part2.Sub(dayStart)))
@@ -141,13 +141,13 @@ func membersForDay(members []member, day int) []member {
 		}
 	}
 	sort.Slice(selectedMembers, func(i, j int) bool {
-		if selectedMembers[i].day[day].part2 == zeroTime {
-			if selectedMembers[j].day[day].part2 == zeroTime {
+		if selectedMembers[i].day[day].part2.Equal(zeroTime) {
+			if selectedMembers[j].day[day].part2.Equal(zeroTime) {
 				return selectedMembers[i].day[day].part1.Before(selectedMembers[j].day[day].part1)
 			}
 			return false
 		}
-		if selectedMembers[j].day[day].part2 == zeroTime {
+		if selectedMembers[j].day[day].part2.Equal(zeroTime) {
 			return true
 		}
 		return selectedMembers[i].day[day].part2.Before(selectedMembers[j].day[day].part2)
