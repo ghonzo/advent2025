@@ -115,16 +115,16 @@ func renderResults(body []byte, day int) string {
 	dayStart := time.Date(2025, time.December, day, 0, 0, 0, 0, eastCoastLocation)
 	// Just return the names that have at least one star on the day
 	var sb strings.Builder
-	const fmtString = "%-20s | %11v | %11v"
-	sb.WriteString(fmt.Sprintf(fmtString, "Day "+fmt.Sprint(day), "Part 1", "Part 2"))
-	sb.WriteString("\n------------------------------------------------\n")
+	const fmtString = "%-20s | %11v | %11v | %11v"
+	sb.WriteString(fmt.Sprintf(fmtString, "Day "+fmt.Sprint(day), "Part 1", "Part 2", "Delta"))
+	sb.WriteString("\n--------------------------------------------------------------\n")
 	for _, m := range membersForDay(members, day) {
 		if stars, ok := m.day[day]; ok {
 			part1Duration := stars.part1.Sub(dayStart)
 			if stars.part2.Equal(zeroTime) {
-				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, "-"))
+				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, "-", "-"))
 			} else {
-				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, stars.part2.Sub(dayStart)))
+				sb.WriteString(fmt.Sprintf(fmtString, m.name, part1Duration, stars.part2.Sub(dayStart), stars.part2.Sub(stars.part1)))
 			}
 			sb.WriteByte('\n')
 		}
