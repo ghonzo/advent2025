@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"regexp"
+	"strings"
 
 	"github.com/ghonzo/advent2025/common"
 )
@@ -20,20 +20,19 @@ func main() {
 
 func part1(entries []string) int {
 	var numbers [][]int
-	var lineNum int
-	for lineNum = 0; entries[lineNum][0] != '*'; lineNum++ {
-		numbers = append(numbers, common.ConvertToInts(entries[lineNum]))
+	for _, entry := range entries[:len(entries)-1] {
+		numbers = append(numbers, common.ConvertToInts(entry))
 	}
-	var sep = regexp.MustCompile(`\s+`)
 	var sum int
-	for i, op := range sep.Split(entries[lineNum], -1) {
-		if op == "*" {
+	for i, op := range strings.Fields(entries[len(entries)-1]) {
+		switch op {
+		case "*":
 			subTotal := 1
 			for _, n := range numbers {
 				subTotal *= n[i]
 			}
 			sum += subTotal
-		} else if op == "+" {
+		case "+":
 			for _, n := range numbers {
 				sum += n[i]
 			}
@@ -49,10 +48,11 @@ func part2(entries []string) int {
 	var subTotal int
 	for col := 0; ; col++ {
 		if col < len(entries[numLines-1]) {
-			if entries[numLines-1][col] == '*' {
+			switch entries[numLines-1][col] {
+			case '*':
 				subTotal = 1
 				op = '*'
-			} else if entries[numLines-1][col] == '+' {
+			case '+':
 				subTotal = 0
 				op = '+'
 			}
@@ -64,9 +64,10 @@ func part2(entries []string) int {
 				break
 			}
 		} else {
-			if op == '*' {
+			switch op {
+			case '*':
 				subTotal *= num
-			} else if op == '+' {
+			case '+':
 				subTotal += num
 			}
 		}
