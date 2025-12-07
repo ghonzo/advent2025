@@ -20,12 +20,12 @@ func main() {
 
 func part1(entries []string) int {
 	var count int
-	beam := make([]bool, len(entries[0]))
-	start := strings.Index(entries[0], "S")
-	beam[start] = true
+	width := len(entries[0])
+	beam := make([]bool, width)
+	beam[strings.IndexByte(entries[0], 'S')] = true
 	for i := 2; i < len(entries); i += 2 {
 		line := entries[i]
-		nextBeam := make([]bool, len(entries[0]))
+		nextBeam := make([]bool, width)
 		for x, b := range beam {
 			if b {
 				if line[x] == '^' {
@@ -42,6 +42,7 @@ func part1(entries []string) int {
 	return count
 }
 
+// Yep, we need memoization here
 var memo [][]int
 
 func part2(entries []string) int {
@@ -49,8 +50,7 @@ func part2(entries []string) int {
 	for i := range memo {
 		memo[i] = make([]int, len(entries[0]))
 	}
-	start := strings.Index(entries[0], "S")
-	return timelines(entries, 2, start)
+	return timelines(entries, 2, strings.IndexByte(entries[0], 'S'))
 }
 
 // Returns the number of timelines at this given row and position
