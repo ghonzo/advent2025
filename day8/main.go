@@ -21,7 +21,7 @@ func main() {
 
 type box struct {
 	x, y, z   int
-	connected mapset.Set[*box]
+	connected []*box
 }
 
 type pair struct {
@@ -29,7 +29,7 @@ type pair struct {
 	dist int
 }
 
-// This is actually the square of the distance
+// This is actually the square of the distance but doesn't matter for our purposes
 func distance(a, b *box) int {
 	dx := a.x - b.x
 	dy := a.y - b.y
@@ -42,10 +42,9 @@ func part1(entries []string, connect int) int {
 	for _, entry := range entries {
 		coords := common.ConvertToInts(entry)
 		b := &box{
-			x:         coords[0],
-			y:         coords[1],
-			z:         coords[2],
-			connected: mapset.NewThreadUnsafeSet[*box](),
+			x: coords[0],
+			y: coords[1],
+			z: coords[2],
 		}
 		allBoxes = append(allBoxes, b)
 	}
@@ -65,9 +64,10 @@ func part1(entries []string, connect int) int {
 	})
 	// Now connect boxes
 	for _, p := range allPairs[:connect] {
-		p.a.connected.Add(p.b)
-		p.b.connected.Add(p.a)
+		p.a.connected = append(p.a.connected, p.b)
+		p.b.connected = append(p.b.connected, p.a)
 	}
+	// Once we've seen a box, toss it in here
 	visited := mapset.NewThreadUnsafeSet[*box]()
 	var circuitSizes []int
 	// Now find all the circuit sizes
@@ -85,17 +85,19 @@ func part1(entries []string, connect int) int {
 	return circuitSizes[0] * circuitSizes[1] * circuitSizes[2]
 }
 
+// Return all of the boxes connected to start (incl. start)
 func findCircuit(start *box) mapset.Set[*box] {
 	toVisit := mapset.NewThreadUnsafeSet(start)
 	circuit := mapset.NewThreadUnsafeSet[*box]()
 	for {
 		b, ok := toVisit.Pop()
 		if !ok {
+			// That means no more to visit
 			return circuit
 		}
 		if !circuit.Contains(b) {
 			circuit.Add(b)
-			toVisit = toVisit.Union(b.connected)
+			toVisit.Append(b.connected...)
 		}
 	}
 }
@@ -105,10 +107,9 @@ func part2(entries []string) int {
 	for _, entry := range entries {
 		coords := common.ConvertToInts(entry)
 		b := &box{
-			x:         coords[0],
-			y:         coords[1],
-			z:         coords[2],
-			connected: mapset.NewThreadUnsafeSet[*box](),
+			x: coords[0],
+			y: coords[1],
+			z: coords[2],
 		}
 		allBoxes = append(allBoxes, b)
 	}
@@ -130,12 +131,12 @@ func part2(entries []string) int {
 	allConnected := false
 outer:
 	for _, p := range allPairs {
-		p.a.connected.Add(p.b)
-		p.b.connected.Add(p.a)
+		p.a.connected = append(p.a.connected, p.b)
+		p.b.connected = append(p.b.connected, p.a)
 		// Any unconnected boxes?
 		if !allConnected {
 			for _, b := range allBoxes {
-				if b.connected.IsEmpty() {
+				if len(b.connected) == 0 {
 					continue outer
 				}
 			}
