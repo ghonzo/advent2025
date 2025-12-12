@@ -20,17 +20,25 @@ func main() {
 
 func part1(entries []string) int {
 	var count int
-	areas := []int{6, 7, 7, 7, 5, 7}
-	for _, entry := range entries {
-		if len(entry) > 2 && entry[2] == 'x' {
-			spaceArea := common.Atoi(entry[:2]) * common.Atoi(entry[3:5])
-			var shapeArea int
-			for i, numShapesStr := range strings.Fields(entry[7:]) {
-				shapeArea += areas[i] * common.Atoi(numShapesStr)
-			}
-			if shapeArea <= spaceArea {
-				count++
-			}
+	// First read the shapes. We just need to record the areas
+	var areas [6]int
+	for i := range 6 {
+		var area int
+		for lineNum := 5*i + 1; lineNum <= 5*i+3; lineNum++ {
+			area += strings.Count(entries[lineNum], "#")
+		}
+		areas[i] = area
+	}
+	for _, entry := range entries[30:] {
+		colonIndex := strings.IndexByte(entry, ':')
+		spaceDims := common.ConvertToInts(entry[:colonIndex])
+		spaceArea := spaceDims[0] * spaceDims[1]
+		var shapeArea int
+		for i, numShapesStr := range strings.Fields(entry[colonIndex+2:]) {
+			shapeArea += areas[i] * common.Atoi(numShapesStr)
+		}
+		if shapeArea <= spaceArea {
+			count++
 		}
 	}
 	return count
